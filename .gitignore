@@ -1,0 +1,4 @@
+# Locked Python Version Files
+Pipfile.lock
+
+.venv
