@@ -1,4 +1,9 @@
 from __init__ import CURSOR, CONN
+from username import Username
+from password import Password
+import random
+import string
+
 
 class User:
     all = {}
@@ -6,6 +11,7 @@ class User:
         self.id = id
         self.first_name = first_name
         self.last_name = last_name 
+        # User.all.append(self) #working to resolve
 
     @classmethod
     def create_table(cls):
@@ -17,7 +23,6 @@ class User:
             last_name TEXT
             )
         """
-        print("SQL Statement:", sql) 
         CURSOR.execute(sql)
         CONN.commit()
 
@@ -25,15 +30,15 @@ class User:
     def drop_table(cls):
         """ Drop the table that persists User  instances """
         sql = """
-            DROP TABLE IF EXISTS reviews;
+            DROP TABLE IF EXISTS users;
         """
         CURSOR.execute(sql)
         CONN.commit()
 
     def save(self):
-        """ Insert a new row with the first_name and last_name values of the current User object.
+        """Insert a new row with the first_name and last_name values of the current User object.
         Update object id attribute using the primary key value of new row.
-        Save the object in local dictionary using table row's PK as dictionary key"""
+        Save the object in local dictionary using table row's PK as dictionary key."""
         sql = """
                 INSERT INTO users (first_name, last_name)
                 VALUES (?, ?)
@@ -45,12 +50,42 @@ class User:
         self.id = CURSOR.lastrowid
         type(self).all[self.id] = self
 
+        # Create a username for the user
+        Username.create_table()
+        username = Username.create(username=self.generate_username(), user_id=self.id)
+
+        # Generate and create a password for the user
+        # Password.create_table()
+        # password_entry = None
+        # password_entry = 
+        # password = Password.create(password =self.generate_password(), username_id=self.id), password
+
+        return username
+        
+    def generate_username(self):
+        """Generate a username based on the user's first name and last name"""
+        # Implement your username generation logic here
+        # For example, concatenate first name and last name
+        return self.first_name.lower() + self.last_name.lower()
+
+    # def generate_password(self):
+    #     """Generate a password based on the user's first name and last name."""
+    #     while True:  # Loop indefinitely until a valid password is generated
+    #         password_length = random.randint(1, 3)
+    #         password = ''.join(random.choices(string.ascii_letters + string.digits, k=password_length))
+    #         if 0 < password_length <= 3:  # Check if the password length is valid
+    #             return password  # Return the password if valid
+
     @classmethod
     def create(cls, first_name, last_name):
         """ Initialize a new User instance and save the object to the database. Return the new instance. """
-        user = cls(first_name, last_name)
+        user = cls(first_name, last_name,)
         user.save()
-        return user
+        # import pdb
+        # pdb.set_trace()
+        # print(user)
+
+        # return user
 
     @classmethod
     def instance_from_db(cls, row):
@@ -124,19 +159,50 @@ class User:
     def user_list(cls):
         for user_id in cls.all:
             user = cls.all[user_id]
-            print(f"User Id: {user.id} User Info: {user.first_name} {user.last_name}")
+            if user.id is not None:
+                username = Username.find_by_id(user_id)
+                password = Password.find_by_id(username_id = user_id)
+                if username:
+                    print(f"User Id: {user.id} User Info: {user.first_name} {user.last_name} Username: {username.username} Password: {password.password}")
+                else:
+                    print(f"User Id: {user.id} User Info: {user.first_name} {user.last_name} (No username found)")
 
-User.create_table()
-User.create(first_name= 'John', last_name= 'Smith')
-User.create(first_name = 'Emily', last_name = 'Johnson')
-User.create(first_name = 'Michael' , last_name ='Williams')
-User.create(first_name = 'Sarah', last_name = 'Jones')
-User.create(first_name = 'Christopher', last_name = 'Brown')
-User.create(first_name = 'Jessica', last_name = 'Davis')
-User.create(first_name = 'Matthew', last_name = 'Miller')
-User.create(first_name = 'Amanda', last_name = 'Wilson')
-User.create(first_name = 'David', last_name = 'Moore')
-User.create(first_name = 'Jennifer', last_name = 'Taylor')
-    
 
-User.user_list()
+if __name__ == '__main__':
+    User.create_table()
+
+
+
+    # john = User.create(first_name= 'John', last_name= 'Smith')
+    # emily = User.create(first_name = 'Emily', last_name = 'Johnson')
+    # michael = User.create(first_name = 'Michael' , last_name ='Williams')
+    # sarah = User.create(first_name = 'Sarah', last_name = 'Jones')
+    # christopher = User.create(first_name = 'Christopher', last_name = 'Brown')
+    # jessica = User.create(first_name = 'Jessica', last_name = 'Davis')
+    # matthew = User.create(first_name = 'Matthew', last_name = 'Miller')
+    # amanda = User.create(first_name = 'Amanda', last_name = 'Wilson')
+    # david = User.create(first_name = 'David', last_name = 'Moore')
+    # jennifer = User.create(first_name = 'Jennifer', last_name = 'Taylor')
+    # User.user_list()
+    # User.drop_table()
+    # Username.drop_table()
+    # Password.drop_table()
+
+
+    # # jsmith = Username.create(username='jsmith', user_id=john.id)
+    # # ejohnson = Username.create(username='ejohnson', user_id=emily.id)
+    # # mwilliams = Username.create(username='mwilliams', user_id=michael.id)
+    # # sjones = Username.create(username='sjones', user_id=sarah.id)
+    # # cbrown = Username.create(username='cbrown', user_id=christopher.id)
+
+    # # jdavis = Username.create(username='jdavis', user_id=jessica.id)
+
+    # # mmiller = Username.create(username='mmiller', user_id=matthew.id)
+
+    # # awilson = Username.create(username='awilson', user_id=amanda.id)
+
+    # # dmoore = Username.create(username='dmoore', user_id=david.id)
+
+    # # jtaylor = Username.create(username='jtaylore', user_id=jennifer.id)
+
+

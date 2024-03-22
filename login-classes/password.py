@@ -1,12 +1,12 @@
 from __init__ import CURSOR, CONN
-from password import Username
 
 class Password:
     all = {}
-    def __init__ (self, username_id, password, id = None):
+    def __init__ (self, password, username_id, id = None):
         self.id = id
         self.password = password
         self.username_id = username_id
+        # Password.all.append(self) #working to resolve
 
     def __repr__(self):
         return (
@@ -33,7 +33,8 @@ class Password:
 
     @username_id.setter
     def username_id(self, username_id):
-        if type(username_id) is int and Username.find_by_id(username_id):
+        from user import User
+        if isinstance(username_id, int) and User.find_by_id(username_id):
             self._username_id = username_id
         else:
             raise ValueError(
@@ -75,6 +76,7 @@ class Password:
 
         self.id = CURSOR.lastrowid
         type(self).all[self.id] = self
+        
 
     def update(self):
         """Update the table row corresponding to the current password instance."""
@@ -123,7 +125,7 @@ class Password:
             password.username_id = row[2]
         else:
             # not in dictionary, create new instance and add to dictionary
-            password = cls(row[1], row[2], row[3])
+            password = cls(row[1], row[2])
             password.id = row[0]
             cls.all[password.id] = password
         return password
@@ -141,15 +143,15 @@ class Password:
         return [cls.instance_from_db(row) for row in rows]
     
     @classmethod
-    def find_by_id(cls, id):
+    def find_by_id(cls, username_id):
         """Return Username object corresponding to the table row matching the specified primary key"""
         sql = """
             SELECT *
             FROM passwords
-            WHERE id = ?
+            WHERE username_id = ?
         """
 
-        row = CURSOR.execute(sql, (id,)).fetchone()
+        row = CURSOR.execute(sql, (username_id,)).fetchone()
         return cls.instance_from_db(row) if row else None
 
     @classmethod
@@ -174,5 +176,3 @@ class Password:
 
         rows = CURSOR.fetchall()
         return User.instance_from_db(row)
-
-Password.create_table()

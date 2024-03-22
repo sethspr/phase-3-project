@@ -1,16 +1,18 @@
 from __init__ import CURSOR, CONN
-from user import User
+import random
+import string
 
 class Username:
     all = {}
-    def __init__ (self, username, user_id, id = None):
+    def __init__ (self, username, user_id, id=None):
         self.id = id
         self.username = username
         self.user_id = user_id
+        # Username.all.append(self) #working to resolve
 
     def __repr__(self):
         return (
-            f"<Username {self.id}: {self.username}, " +
+            f"<Username {self.username}, " +
             f"User ID: {self.user_id}>"
         )
 
@@ -33,6 +35,7 @@ class Username:
 
     @user_id.setter
     def user_id(self, user_id):
+        from user import User
         if type(user_id) is int and User.find_by_id(user_id):
             self._user_id = user_id
         else:
@@ -62,6 +65,7 @@ class Username:
         CONN.commit()
 
     def save(self):
+        from password import Password
         """ Insert a new row with the username and user_id values of the current Username object.
         Update object id attribute using the primary key value of new row.
         Save the object in local dictionary using table row's PK as dictionary key"""
@@ -73,8 +77,23 @@ class Username:
         CURSOR.execute(sql, (self.username, self.user_id))
         CONN.commit()
 
-        self.id = CURSOR.lastrowid
+        self.user_id = CURSOR.lastrowid
         type(self).all[self.id] = self
+        # Generate and create a password for the user
+        Password.create_table()
+        # password_entry = None
+        # password_entry = 
+        password = Password.create(password =self.generate_password(), username_id=self.user_id)
+
+        # return password
+
+    def generate_password(self):
+        """Generate a password based on the user's first name and last name."""
+        while True:  # Loop indefinitely until a valid password is generated
+            password_length = random.randint(1, 3)
+            password = ''.join(random.choices(string.ascii_letters + string.digits, k=password_length))
+            if 0 < password_length <= 3:  # Check if the password length is valid
+                return password  # Return the password if valid
 
     def update(self):
         """Update the table row corresponding to the current Username instance."""
@@ -123,7 +142,7 @@ class Username:
             username.user_id = row[2]
         else:
             # not in dictionary, create new instance and add to dictionary
-            username = cls(row[1], row[2], row[3])
+            username = cls(row[1], row[2])
             username.id = row[0]
             cls.all[username.id] = username
         return username
@@ -141,15 +160,15 @@ class Username:
         return [cls.instance_from_db(row) for row in rows]
 
     @classmethod
-    def find_by_id(cls, id):
+    def find_by_id(cls, user_id):
         """Return Username object corresponding to the table row matching the specified primary key"""
         sql = """
             SELECT *
             FROM usernames
-            WHERE id = ?
+            WHERE user_id = ?
         """
 
-        row = CURSOR.execute(sql, (id,)).fetchone()
+        row = CURSOR.execute(sql, (user_id,)).fetchone()
         return cls.instance_from_db(row) if row else None
 
     @classmethod
@@ -165,6 +184,7 @@ class Username:
         return cls.instance_from_db(row) if row else None
 
     def user(self):
+        from user import User
         """Return user associated with current username"""
         sql = """
             SELECT * FROM users
@@ -175,17 +195,3 @@ class Username:
         rows = CURSOR.fetchall()
         return User.instance_from_db(row)
         
-Username.create_table()
-User.create(username = "Jsmith")
-User.create(username =  = 'Ejohnson')
-User.create(username =  = 'Mwilliams')
-User.create(username =  = 'Sjones')
-User.create(username =  = 'Cbrown')
-User.create(username =  = 'Jdavis')
-User.create(username =  = 'Mmiller')
-User.create(username =  = 'Awilson')
-User.create(username =  = 'Dmoore')
-User.create(username =  = 'Jtaylor')
-    
-
-User.user_list()
