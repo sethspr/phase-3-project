@@ -17,4 +17,4 @@ print("Cracking password...")
 
 attempts = crack_password(password)
 
-print(f"The password was cracked in {attempts} attempts.")
+print(f"The password: {password} was cracked in {attempts} attempts.")
