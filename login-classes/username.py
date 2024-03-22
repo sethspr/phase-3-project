@@ -176,3 +176,16 @@ class Username:
         return User.instance_from_db(row)
         
 Username.create_table()
+User.create(username = "Jsmith")
+User.create(username =  = 'Ejohnson')
+User.create(username =  = 'Mwilliams')
+User.create(username =  = 'Sjones')
+User.create(username =  = 'Cbrown')
+User.create(username =  = 'Jdavis')
+User.create(username =  = 'Mmiller')
+User.create(username =  = 'Awilson')
+User.create(username =  = 'Dmoore')
+User.create(username =  = 'Jtaylor')
+    
+
+User.user_list()

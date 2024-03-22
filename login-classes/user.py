@@ -14,8 +14,8 @@ class User:
             CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY,
             first_name TEXT,
-            last_name TEXT,
-
+            last_name TEXT
+            )
         """
         print("SQL Statement:", sql) 
         CURSOR.execute(sql)
@@ -118,10 +118,16 @@ class User:
 
         rows = CURSOR.execute(sql).fetchall()
 
-        return [cls.instance_from_db(row) for row in rows]   
+        return [cls.instance_from_db(row) for row in rows]  
+
+    @classmethod
+    def user_list(cls):
+        for user_id in cls.all:
+            user = cls.all[user_id]
+            print(f"User Id: {user.id} User Info: {user.first_name} {user.last_name}")
 
 User.create_table()
-User.create(first_name=John, last_name=Smith)
+User.create(first_name= 'John', last_name= 'Smith')
 User.create(first_name = 'Emily', last_name = 'Johnson')
 User.create(first_name = 'Michael' , last_name ='Williams')
 User.create(first_name = 'Sarah', last_name = 'Jones')
@@ -131,3 +137,6 @@ User.create(first_name = 'Matthew', last_name = 'Miller')
 User.create(first_name = 'Amanda', last_name = 'Wilson')
 User.create(first_name = 'David', last_name = 'Moore')
 User.create(first_name = 'Jennifer', last_name = 'Taylor')
+    
+
+User.user_list()
