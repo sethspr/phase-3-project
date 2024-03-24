@@ -23,8 +23,6 @@ username_list = [obj.username for obj in username_objs]
 password_list = [obj.password for obj in password_objs]
 
 list_of_ids = list(range(1, len(username_list) + 1))
-
-usernames_table = {key: value for key, value in zip(list_of_ids, username_list)}
 passwords_table = {key: value for key, value in zip(list_of_ids, password_list)}
 
 def crack(password):
