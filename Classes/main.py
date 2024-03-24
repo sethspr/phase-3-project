@@ -39,14 +39,19 @@ def crack(password):
                 return guess, attempts  # If so, return the cracked password and the number of attempts
 
 def crack_password_for_username(username):
-    if username in usernames_table.values():  # Check if the username exists
-        user_id = list(usernames_table.keys())[list(usernames_table.values()).index(username)]
-        password = passwords_table[user_id]  # Get the password associated with the username
-        print(f"Cracking password for {username}...")  # Print message indicating cracking has started
-        cracked_password, attempts = crack(password)  # Crack the password
-        print(f"The password for {username} is: {cracked_password} (cracked in {attempts} attempts).")  # Print the cracked password and number of attempts
+    for user_id, user_name in enumerate(username_list, start=1):
+        if user_name == username:  # Check if the provided username matches the current username in the loop
+            password = passwords_table[user_id]  # Get the password associated with the current user_id
+            print(f"Cracking password for {username}...")  # Print message indicating cracking has started
+            cracked_password, attempts = crack(password)  # Crack the password
+            if cracked_password:  # Check if the password is cracked successfully
+                print(f"The password for {username} is: {cracked_password} (cracked in {attempts} attempts).")
+            else:
+                print(f"Failed to crack the password for {username}.")  # Print message if failed to crack the password
+            break
     else:
         print("Username not found.")  # Print message if the username is not found
+
 
 def main():
     username = input("Enter the username: ")
@@ -54,3 +59,13 @@ def main():
 
 if __name__ == "__main__":
     main()  # Execute the main function if this script is run directly
+
+# def crack_password_for_username(username):
+#     if username in usernames_table.values():  # Check if the username exists
+#         user_id = list(usernames_table.keys())[list(usernames_table.values()).index(username)]
+#         password = passwords_table[user_id]  # Get the password associated with the username
+#         print(f"Cracking password for {username}...")  # Print message indicating cracking has started
+#         cracked_password, attempts = crack(password)  # Crack the password
+#         print(f"The password for {username} is: {cracked_password} (cracked in {attempts} attempts).")  # Print the cracked password and number of attempts
+#     else:
+#         print("Username not found.")  # Print message if the username is not found
