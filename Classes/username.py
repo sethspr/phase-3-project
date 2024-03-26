@@ -81,11 +81,8 @@ class Username:
         type(self).all[self.id] = self
         # Generate and create a password for the user
         Password.create_table()
-        # password_entry = None
-        # password_entry = 
         password = Password.create(password =self.generate_password(), username_id=self.user_id)
 
-        # return password
 
     def generate_password(self):
         """Generate a password based on the user's first name and last name."""
