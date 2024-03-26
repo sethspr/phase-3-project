@@ -11,7 +11,6 @@ class User:
         self.id = id
         self.first_name = first_name
         self.last_name = last_name 
-        # User.all.append(self) #working to resolve
 
     @classmethod
     def create_table(cls):
@@ -53,39 +52,24 @@ class User:
         # Create a username for the user
         Username.create_table()
         username = Username.create(username=self.generate_username(), user_id=self.id)
-
-        # Generate and create a password for the user
-        # Password.create_table()
-        # password_entry = None
-        # password_entry = 
-        # password = Password.create(password =self.generate_password(), username_id=self.id), password
-
         return username
         
     def generate_username(self):
         """Generate a username based on the user's first name and last name"""
         # Implement your username generation logic here
         # For example, concatenate first name and last name
-        return self.first_name.lower() + self.last_name.lower()
+        new_user_name = self.first_name[0].upper() + self.last_name.lower()
+        random_numbers = ''.join(random.choices(string.digits, k=2))
+        new_user_name += random_numbers
+        return new_user_name
 
-    # def generate_password(self):
-    #     """Generate a password based on the user's first name and last name."""
-    #     while True:  # Loop indefinitely until a valid password is generated
-    #         password_length = random.randint(1, 3)
-    #         password = ''.join(random.choices(string.ascii_letters + string.digits, k=password_length))
-    #         if 0 < password_length <= 3:  # Check if the password length is valid
-    #             return password  # Return the password if valid
 
     @classmethod
     def create(cls, first_name, last_name):
         """ Initialize a new User instance and save the object to the database. Return the new instance. """
         user = cls(first_name, last_name,)
         user.save()
-        # import pdb
-        # pdb.set_trace()
-        # print(user)
 
-        # return user
 
     @classmethod
     def instance_from_db(cls, row):
@@ -183,26 +167,11 @@ if __name__ == '__main__':
     # amanda = User.create(first_name = 'Amanda', last_name = 'Wilson')
     # david = User.create(first_name = 'David', last_name = 'Moore')
     # jennifer = User.create(first_name = 'Jennifer', last_name = 'Taylor')
+    # jc = User.create(first_name= 'John', last_name= 'Cena')
+    # brad = User.create(first_name= 'Brad', last_name= 'Pitt')
+
     # User.user_list()
     # User.drop_table()
     # Username.drop_table()
     # Password.drop_table()
-
-
-    # # jsmith = Username.create(username='jsmith', user_id=john.id)
-    # # ejohnson = Username.create(username='ejohnson', user_id=emily.id)
-    # # mwilliams = Username.create(username='mwilliams', user_id=michael.id)
-    # # sjones = Username.create(username='sjones', user_id=sarah.id)
-    # # cbrown = Username.create(username='cbrown', user_id=christopher.id)
-
-    # # jdavis = Username.create(username='jdavis', user_id=jessica.id)
-
-    # # mmiller = Username.create(username='mmiller', user_id=matthew.id)
-
-    # # awilson = Username.create(username='awilson', user_id=amanda.id)
-
-    # # dmoore = Username.create(username='dmoore', user_id=david.id)
-
-    # # jtaylor = Username.create(username='jtaylore', user_id=jennifer.id)
-
 
