@@ -89,7 +89,7 @@ class Username:
         while True:  # Loop indefinitely until a valid password is generated
             password_length = random.randint(1, 3)
             password = ''.join(random.choices(string.ascii_letters + string.digits, k=password_length))
-            if 0 < password_length <= 3:  # Check if the password length is valid
+            if password_length == 3:  # Check if the password length is valid
                 return password  # Return the password if valid
 
     def update(self):
@@ -190,5 +190,5 @@ class Username:
         CURSOR.execute(sql, (self.user_id,),)
 
         rows = CURSOR.fetchall()
-        return User.instance_from_db(row)
+        return User.instance_from_db(rows)
         

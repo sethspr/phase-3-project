@@ -169,6 +169,13 @@ if __name__ == '__main__':
     # jennifer = User.create(first_name = 'Jennifer', last_name = 'Taylor')
     # jc = User.create(first_name= 'John', last_name= 'Cena')
     # brad = User.create(first_name= 'Brad', last_name= 'Pitt')
+    # wayne = User.delete
+
+    # user_id_find = User.find_by_id(18)
+
+    # print(brad)
+
+    # User.delete(user_id_find)
 
     # User.user_list()
     # User.drop_table()
